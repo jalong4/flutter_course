@@ -48,11 +48,11 @@ class ProductPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Image.asset(imageUrl),
-            Padding(
+            Container(
               padding: const EdgeInsets.all(10.0),
               child: Text(title),
             ),
-            Padding(
+            Container(
               padding: const EdgeInsets.all(10.0),
               child: RaisedButton(
                 color: Theme.of(context).accentColor,
