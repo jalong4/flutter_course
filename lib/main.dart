@@ -25,6 +25,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+    void _updateProduct(int index, Map<String, dynamic> product) {
+    print('Updating product');
+    print(product);
+    setState(() {
+      _products[index] = product;
+    });
+  }
+
   void _deleteProduct(int index) {
     setState(() {
       _products.removeAt(index);
@@ -33,16 +41,31 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    
+    // add test product
+
+    _addProduct({
+      'title': 'Chocolate',
+      'description': 'I love chocolate!',
+      'price': 12.0,
+      'image': 'assets/food.jpg',
+      'address': 'Union Square, San Francisco',
+    });
+
     return MaterialApp(
       theme: ThemeData(
           brightness: Brightness.light,
           primarySwatch: Colors.deepOrange,
-          accentColor: Colors.deepPurple),
+          accentColor: Colors.deepPurple,
+          buttonColor: Colors.deepPurple,
+          buttonTheme: ButtonThemeData(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)))),
       // home: AuthPage(),
       routes: {
         '/': (BuildContext context) => AuthPage(),
         '/admin': (BuildContext context) =>
-            ProductAdminPage(_addProduct, _deleteProduct),
+            ProductAdminPage(_addProduct, _updateProduct, _deleteProduct, _products),
         '/products': (BuildContext context) => ProductsPage(_products),
       },
       onGenerateRoute: (RouteSettings settings) {
@@ -53,8 +76,7 @@ class _MyAppState extends State<MyApp> {
         if (pathElements[1] == 'product') {
           final int index = int.parse(pathElements[2]);
           return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => ProductPage(
-                  _products[index]['title'], _products[index]['image']));
+              builder: (BuildContext context) => ProductPage(_products[index]));
         }
         return null;
       },

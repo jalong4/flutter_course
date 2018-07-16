@@ -1,36 +1,61 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import '../widgets/products/price_tag.dart';
+import '../widgets/ui_elements/title_default.dart';
+
 class ProductPage extends StatelessWidget {
-  final String title;
-  final String imageUrl;
+  final Map<String, dynamic> product;
 
-  ProductPage(this.title, this.imageUrl);
+  ProductPage(this.product);
 
-  void _showWarningDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('This action cannot be undone!'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('CANCEL'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              FlatButton(
-                child: Text('CONFIRM'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
-                },
-              ),
-            ],
-          );
-        });
+  Widget _buildProductDetails(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Image.asset(product['image']),
+          Container(
+            margin: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TitleDefault(product['title']),
+                SizedBox(
+                  width: 8.0,
+                ),
+                PriceTag(product['price']),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+            margin: const EdgeInsets.only(bottom: 10.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey, width: 1.0),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: Text(product['address']),
+          ),
+          Divider(height: 1.0, color: Colors.grey),
+          Container(
+            alignment: Alignment.topLeft,
+            margin: const EdgeInsets.only(top: 10.0),
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              'Description:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            child: Text(product['description']),
+          ),
+          Divider(height: 1.0, color: Colors.grey),
+        ],
+      ),
+    );
   }
 
   @override
@@ -42,26 +67,9 @@ class ProductPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text(product['title']),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(imageUrl),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(title),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              child: RaisedButton(
-                color: Theme.of(context).accentColor,
-                child: Text('DELETE'),
-                onPressed: () => _showWarningDialog(context),
-              ),
-            ),
-          ],
-        ),
+        body: _buildProductDetails(context),
       ),
     );
   }
